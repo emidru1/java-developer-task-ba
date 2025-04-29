@@ -40,6 +40,6 @@ public class PaymentUtils {
     }
 
     public static double calculateCancellationFee(Payment payment) {
-        return Math.floor(ChronoUnit.HOURS.between(payment.getCreatedAt(), LocalDateTime.now()));
+        return payment.getCancellationFeeCoefficient() * Math.floor(ChronoUnit.HOURS.between(payment.getCreatedAt(), LocalDateTime.now()));
     }
 }

@@ -36,7 +36,6 @@ public class PaymentController {
 
     @PostMapping("/payments")
     public ResponseEntity<Payment> createPayment(@Valid @RequestBody PaymentDto paymentDto) {
-        System.out.println("Received payment DTO: " + paymentDto.toString());
         Payment payment = PaymentUtils.determinePaymentType(paymentDto);
         return ResponseEntity.ok(paymentService.createPayment(payment));
     }
@@ -51,6 +50,7 @@ public class PaymentController {
         }
 
         double cancellationFee = PaymentUtils.calculateCancellationFee(payment);
+
         payment.setCancellationFee(BigDecimal.valueOf(cancellationFee));
         payment.setStatus(PaymentStatus.CANCELLED);
 

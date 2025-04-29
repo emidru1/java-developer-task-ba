@@ -3,6 +3,8 @@ package com.emidru1.payments.dtos;
 import com.emidru1.payments.entity.Currency;
 import com.emidru1.payments.entity.PaymentStatus;
 import com.emidru1.payments.entity.PaymentType;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +19,7 @@ public class PaymentDto {
 
     @Getter @Setter
     @NotNull
+    @DecimalMin(value = "0.01", message = "Amount must be greater than 0")
     private BigDecimal amount;
 
     @Getter @Setter
@@ -25,10 +28,11 @@ public class PaymentDto {
 
     @Getter @Setter
     @NotNull
+    @NotBlank
     private String debtorIban;
 
     @Getter @Setter
-    @NotNull
+    @NotBlank
     private String creditorIban;
 
     @Getter @Setter
@@ -38,9 +42,11 @@ public class PaymentDto {
     private Date createdAt;
 
     @Getter @Setter
+    @NotBlank
     private String details;
 
     @Getter @Setter
+    @NotBlank
     private String bicCode;
 
     public PaymentDto() {
