@@ -3,7 +3,9 @@ package com.emidru1.payments.controller;
 import com.emidru1.payments.entity.Payment;
 import com.emidru1.payments.entity.Type1Payment;
 import com.emidru1.payments.entity.Type2Payment;
+import com.emidru1.payments.entity.enums.Currency;
 import com.emidru1.payments.entity.enums.PaymentStatus;
+import com.emidru1.payments.entity.enums.PaymentType;
 import com.emidru1.payments.repository.PaymentRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,21 +33,32 @@ public class PaymentControllerTest {
     @BeforeEach
     void setup() {
         paymentRepository.deleteAll();
-        Type1Payment payment = new Type1Payment();
-        payment.setAmount(BigDecimal.valueOf(100));
-        payment.setStatus(PaymentStatus.PENDING);
-        payment.setCreatedAt(LocalDateTime.now());
+
+        Type1Payment payment = new Type1Payment(
+                PaymentType.TYPE1,
+                BigDecimal.valueOf(100),
+                Currency.EUR,
+                "LT1293812371230",
+                "LT1293812371238",
+                "Test details"
+        );
         paymentRepository.save(payment);
 
-        Type2Payment payment2 = new Type2Payment();
-        payment2.setAmount(BigDecimal.valueOf(25));
-        payment2.setStatus(PaymentStatus.PENDING);
+        Type2Payment payment2 = new Type2Payment(
+                PaymentType.TYPE2,
+                BigDecimal.valueOf(25),
+                Currency.USD,
+                "LT1293812371230",
+                "LT1293812371238",
+                "Test details"
+        );
         paymentRepository.save(payment2);
 
-        //double save to override JPA-generated createdAt value for payment
+        //double save to override the auto generated createdAt by repository
         payment2.setCreatedAt(LocalDateTime.now().minusDays(2));
         paymentRepository.save(payment2);
     }
+
 
     @Test
     void testShouldReturnUnfilteredListWhenNoFiltersAreApplied() throws Exception {
