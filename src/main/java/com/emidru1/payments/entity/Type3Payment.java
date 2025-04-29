@@ -9,6 +9,8 @@ import java.math.BigDecimal;
 @Entity
 public class Type3Payment extends Payment {
 
+    private static final double CANCELLATION_FEE_COEFFICIENT = 0.15;
+
     @Getter @Setter
     private String bicCode;
 
@@ -17,7 +19,7 @@ public class Type3Payment extends Payment {
     }
 
     public Type3Payment(PaymentType type, BigDecimal amount, Currency currency, String debtorIban, String creditorIban, String bicCode) {
-        super(type, amount, currency, debtorIban, creditorIban);
+        super(type, amount, currency, debtorIban, creditorIban, PaymentStatus.PENDING);
         this.bicCode = bicCode;
         validatePayment();
     }
@@ -30,5 +32,10 @@ public class Type3Payment extends Payment {
         if (bicCode == null || bicCode.isEmpty()) {
             throw new IllegalArgumentException("BIC code cannot be null or empty");
         }
+    }
+
+    @Override
+    public double getCancellationFeeCoefficient() {
+        return CANCELLATION_FEE_COEFFICIENT;
     }
 }

@@ -29,7 +29,7 @@ public class PaymentService {
         return paymentRepository.save(payment);
     }
 
-    public void deletePayment(Long id) {
-        paymentRepository.deleteById(id);
+    public Payment updatePayment(Payment payment) {
+        return paymentRepository.save(payment);
     }
 }

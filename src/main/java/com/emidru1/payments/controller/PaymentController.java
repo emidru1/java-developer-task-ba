@@ -2,12 +2,14 @@ package com.emidru1.payments.controller;
 
 import com.emidru1.payments.dtos.PaymentDto;
 import com.emidru1.payments.entity.Payment;
+import com.emidru1.payments.entity.PaymentStatus;
 import com.emidru1.payments.service.PaymentService;
 import com.emidru1.payments.utils.PaymentUtils;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.MissingResourceException;
 
@@ -36,12 +38,22 @@ public class PaymentController {
     public ResponseEntity<Payment> createPayment(@Valid @RequestBody PaymentDto paymentDto) {
         System.out.println("Received payment DTO: " + paymentDto.toString());
         Payment payment = PaymentUtils.determinePaymentType(paymentDto);
-        payment.validatePayment();
         return ResponseEntity.ok(paymentService.createPayment(payment));
     }
 
-    @DeleteMapping("/payments/{id}")
-    public void deletePayment(@PathVariable Long id) {
-        paymentService.deletePayment(id);
+    @PutMapping("/payments/{id}")
+    public void cancelPayment(@PathVariable Long id) {
+        Payment payment = paymentService.getPaymentById(id)
+                .orElseThrow(() -> new MissingResourceException("Payment not found", Payment.class.getName(), id.toString()));
+
+        if (!PaymentUtils.isPaymentCancellable(payment)) {
+            throw new IllegalArgumentException("Payment cannot be cancelled next day after creation");
+        }
+
+        double cancellationFee = PaymentUtils.calculateCancellationFee(payment);
+        payment.setCancellationFee(BigDecimal.valueOf(cancellationFee));
+        payment.setStatus(PaymentStatus.CANCELLED);
+
+        paymentService.updatePayment(payment);
     }
 }
