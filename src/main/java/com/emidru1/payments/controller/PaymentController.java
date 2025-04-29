@@ -36,7 +36,7 @@ public class PaymentController {
     }
 
     @GetMapping("/payments/{id}")
-    public ResponseEntity<PaymentLookupDto> getPaymentPaymentLookupDtoById(HttpServletRequest request, @PathVariable Long id) {
+    public ResponseEntity<PaymentLookupDto> getPaymentLookupDtoById(HttpServletRequest request, @PathVariable Long id) {
         LoggingUtils.logIpAndCountry(request);
         PaymentLookupDto lookupDto = paymentService.getPaymentLookupDtoById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Payment not found"));
