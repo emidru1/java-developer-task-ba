@@ -1,5 +1,8 @@
 package com.emidru1.payments.entity;
 
+import com.emidru1.payments.entity.enums.Currency;
+import com.emidru1.payments.entity.enums.PaymentStatus;
+import com.emidru1.payments.entity.enums.PaymentType;
 import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,5 +1,8 @@
 package com.emidru1.payments.entity;
 
+import com.emidru1.payments.entity.enums.Currency;
+import com.emidru1.payments.entity.enums.PaymentStatus;
+import com.emidru1.payments.entity.enums.PaymentType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -8,9 +11,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -59,6 +60,7 @@ public abstract class Payment {
         this.debtorIban = debtorIban;
         this.creditorIban = creditorIban;
         this.status = status;
+        this.cancellationFee = BigDecimal.ZERO;
     }
 
     public abstract void validatePayment();

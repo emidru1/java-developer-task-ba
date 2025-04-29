@@ -8,6 +8,8 @@ import com.emidru1.payments.entity.Payment;
 import com.emidru1.payments.entity.Type1Payment;
 import com.emidru1.payments.entity.Type2Payment;
 import com.emidru1.payments.entity.Type3Payment;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -31,7 +33,7 @@ public class PaymentUtils {
                 Type3PaymentValidator.validate(paymentDto);
                 return new Type3Payment(paymentDto.getType(), paymentDto.getAmount(), paymentDto.getCurrency(), paymentDto.getCreditorIban(), paymentDto.getDebtorIban(), paymentDto.getBicCode());
             default:
-                throw new IllegalArgumentException("Invalid payment type provided: " + paymentDto.getType());
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid payment type provided: " + paymentDto.getType());
         }
     }
     // Check if current time is before the payment creation time + 1 day to determine if we can cancel the payment
@@ -48,13 +50,13 @@ public class PaymentUtils {
     // Min and Max amounts should not be negative, nor should min be greater than max
     public static void validateAmountRange(BigDecimal minAmount, BigDecimal maxAmount) {
         if (minAmount != null && maxAmount != null && minAmount.compareTo(maxAmount) > 0) {
-            throw new IllegalArgumentException("Minimum amount cannot be greater than maximum amount");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Minimum amount cannot be greater than maximum amount");
         }
-        if (minAmount != null && minAmount.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("Minimum amount cannot be negative");
+        if (minAmount != null && minAmount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Minimum amount cannot be negative or equal to zero");
         }
-        if (maxAmount != null && maxAmount.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("Maximum amount cannot be negative");
+        if (maxAmount != null && maxAmount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Maximum amount cannot be negative or equal to zero");
         }
     }
 }

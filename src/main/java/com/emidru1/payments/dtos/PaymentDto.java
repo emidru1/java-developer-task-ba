@@ -1,13 +1,14 @@
 package com.emidru1.payments.dtos;
 
-import com.emidru1.payments.entity.Currency;
-import com.emidru1.payments.entity.PaymentStatus;
-import com.emidru1.payments.entity.PaymentType;
+import com.emidru1.payments.entity.enums.Currency;
+import com.emidru1.payments.entity.enums.PaymentStatus;
+import com.emidru1.payments.entity.enums.PaymentType;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.math.BigDecimal;
 import java.util.Date;
 

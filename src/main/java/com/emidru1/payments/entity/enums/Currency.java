@@ -1,4 +1,4 @@
-package com.emidru1.payments.entity;
+package com.emidru1.payments.entity.enums;
 
 public enum Currency {
     USD,
