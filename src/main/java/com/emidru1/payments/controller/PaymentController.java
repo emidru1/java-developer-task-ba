@@ -58,6 +58,10 @@ public class PaymentController {
         if (!PaymentUtils.isPaymentCancellable(payment)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Payment cannot be cancelled the next day after creation");
         }
+        if (payment.getStatus() == PaymentStatus.CANCELLED) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Payment is already cancelled");
+        }
+
         LoggingUtils.logIpAndCountry(request);
         double cancellationFee = PaymentUtils.calculateCancellationFee(payment);
 
