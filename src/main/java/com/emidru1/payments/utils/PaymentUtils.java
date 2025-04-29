@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
@@ -38,13 +39,14 @@ public class PaymentUtils {
     }
     // Check if current time is before the payment creation time + 1 day to determine if we can cancel the payment
     public static boolean isPaymentCancellable(Payment payment) {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime createdAt = payment.getCreatedAt().toLocalDate().plusDays(1).atStartOfDay();
-        return now.isBefore(createdAt);
+        LocalDate creationDate = payment.getCreatedAt().toLocalDate();
+        LocalDate today = LocalDate.now();
+        return today.isEqual(creationDate);
     }
 
     public static double calculateCancellationFee(Payment payment) {
-        return payment.getCancellationFeeCoefficient() * Math.floor(ChronoUnit.HOURS.between(payment.getCreatedAt(), LocalDateTime.now()));
+        long hoursElapsed = Math.max(0, ChronoUnit.HOURS.between(payment.getCreatedAt(), LocalDateTime.now()));
+        return payment.getCancellationFeeCoefficient() * hoursElapsed;
     }
 
     // Min and Max amounts should not be negative, nor should min be greater than max
