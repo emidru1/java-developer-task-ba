@@ -42,7 +42,7 @@ public class PaymentControllerTest {
         payment2.setStatus(PaymentStatus.PENDING);
         paymentRepository.save(payment2);
 
-        //double save to override JPA-generated createdAt value
+        //double save to override JPA-generated createdAt value for payment
         payment2.setCreatedAt(LocalDateTime.now().minusDays(2));
         paymentRepository.save(payment2);
     }

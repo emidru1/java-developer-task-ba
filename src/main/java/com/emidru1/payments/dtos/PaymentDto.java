@@ -28,7 +28,6 @@ public class PaymentDto {
     private Currency currency;
 
     @Getter @Setter
-    @NotNull
     @NotBlank
     private String debtorIban;
 
