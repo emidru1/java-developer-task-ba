@@ -24,21 +24,21 @@ public abstract class Payment {
     private Currency currency;
 
     @Getter @Setter
-    private String debtor_iban;
+    private String debtorIban;
 
     @Getter @Setter
-    private String creditor_iban;
+    private String creditorIban;
 
     public Payment() {
         // default constructor for JPA
     }
 
-    public Payment(PaymentType type, BigDecimal amount, Currency currency, String debtor_iban, String creditor_iban) {
+    public Payment(PaymentType type, BigDecimal amount, Currency currency, String debtorIban, String creditorIban) {
         this.type = type;
         this.amount = amount;
         this.currency = currency;
-        this.debtor_iban = debtor_iban;
-        this.creditor_iban = creditor_iban;
+        this.debtorIban = debtorIban;
+        this.creditorIban = creditorIban;
     }
 
     public abstract void validatePayment();

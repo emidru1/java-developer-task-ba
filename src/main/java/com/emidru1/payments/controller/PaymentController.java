@@ -29,7 +29,7 @@ public class PaymentController {
     @GetMapping("/payments/{id}")
     public Payment getPaymentById(@PathVariable Long id) {
         return paymentService.getPaymentById(id)
-                .orElseThrow(() -> new MissingResourceException("Payment not found", Payment.class.getName(), id.toString()));
+                .orElseThrow(() -> new MissingResourceException("Payment not found", Payment.class.getName(), id.toString())); // need to find more suitable exception here
     }
 
     @PostMapping("/payments")

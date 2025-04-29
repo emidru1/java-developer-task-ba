@@ -16,8 +16,8 @@ public class Type2Payment extends Payment {
         super();
     }
 
-    public Type2Payment(PaymentType type, BigDecimal amount, Currency currency, String debtor_iban, String creditor_iban, String details) {
-        super(type, amount, currency, debtor_iban, creditor_iban);
+    public Type2Payment(PaymentType type, BigDecimal amount, Currency currency, String debtorIban, String creditorIban, String details) {
+        super(type, amount, currency, debtorIban, creditorIban);
         this.details = details;
         validatePayment();
     }
