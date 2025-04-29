@@ -37,13 +37,15 @@ public class PaymentUtils {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid payment type provided: " + paymentDto.getType());
         }
     }
-    // Check if current time is before the payment creation time + 1 day to determine if we can cancel the payment
+
+    // Check if payment was made today
     public static boolean isPaymentCancellable(Payment payment) {
         LocalDate creationDate = payment.getCreatedAt().toLocalDate();
         LocalDate today = LocalDate.now();
         return today.isEqual(creationDate);
     }
 
+    // Calculate fee depending on how long ago the payment was created
     public static double calculateCancellationFee(Payment payment) {
         long hoursElapsed = Math.max(0, ChronoUnit.HOURS.between(payment.getCreatedAt(), LocalDateTime.now()));
         return payment.getCancellationFeeCoefficient() * hoursElapsed;
