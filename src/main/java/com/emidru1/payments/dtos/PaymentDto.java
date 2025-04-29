@@ -42,7 +42,6 @@ public class PaymentDto {
     private Date createdAt;
 
     @Getter @Setter
-    @NotBlank
     private String details;
 
     @Getter @Setter

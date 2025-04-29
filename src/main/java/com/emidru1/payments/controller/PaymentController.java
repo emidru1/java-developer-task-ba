@@ -6,7 +6,9 @@ import com.emidru1.payments.entity.PaymentStatus;
 import com.emidru1.payments.service.PaymentService;
 import com.emidru1.payments.utils.PaymentUtils;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMin;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -15,6 +17,7 @@ import java.util.MissingResourceException;
 
 @RestController
 @RequestMapping("/api")
+@Validated
 public class PaymentController {
 
     private final PaymentService paymentService;
@@ -22,10 +25,12 @@ public class PaymentController {
     public PaymentController(PaymentService paymentService) {
         this.paymentService = paymentService;
     }
-
+    //
     @GetMapping("/payments")
-    public List<Long> getAllPayments() {
-        return paymentService.getAllPayments();
+    public List<Long> getPayments(@RequestParam (required = false) BigDecimal minAmount,
+                                   @RequestParam (required = false) BigDecimal maxAmount) {
+        PaymentUtils.validateAmountRange(minAmount, maxAmount);
+        return paymentService.getFilteredPayments(minAmount, maxAmount);
     }
 
     @GetMapping("/payments/{id}")
@@ -41,9 +46,9 @@ public class PaymentController {
     }
 
     @PutMapping("/payments/{id}")
-    public void cancelPayment(@PathVariable Long id) {
+    public ResponseEntity<Payment> cancelPayment(@PathVariable Long id) {
         Payment payment = paymentService.getPaymentById(id)
-                .orElseThrow(() -> new MissingResourceException("Payment not found", Payment.class.getName(), id.toString()));
+                .orElseThrow(() -> new MissingResourceException("Payment not found", Payment.class.getName(), id.toString())); // replace with better exception
 
         if (!PaymentUtils.isPaymentCancellable(payment)) {
             throw new IllegalArgumentException("Payment cannot be cancelled next day after creation");
@@ -54,6 +59,6 @@ public class PaymentController {
         payment.setCancellationFee(BigDecimal.valueOf(cancellationFee));
         payment.setStatus(PaymentStatus.CANCELLED);
 
-        paymentService.updatePayment(payment);
+        return ResponseEntity.ok(paymentService.updatePayment(payment));
     }
 }
